@@ -1,5 +1,5 @@
 from typing import Iterable
-
+#...
 UNCULTURED_WORDS = ('kotleta', 'pirog')
 
 
