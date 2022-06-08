@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-
+import re
+import csv
 
 def count_words(text: str) -> Dict[str, int]:
     """
@@ -25,10 +26,22 @@ def count_words(text: str) -> Dict[str, int]:
              ключ - слово в нижнем регистре
              значение - количество вхождений слов в текст
     """
+    text = text.lower()
+    text = re.sub('[!@#$\n-.,]', ' ', text)
+    text = list(text.split())
+    len_of_text = len(text)
+    i = 0
+    while i != len_of_text:
+        if not (text[i].isalpha()):
+            text.remove(text[i])
+            len_of_text -= 1
+            continue
+        i += 1
+    number_of_words = {}
+    for i in range(0, len(text)):
+        number_of_words[text[i]] = text.count(text[i])
 
-    # пиши свой код здесь
-
-    return {}
+    return number_of_words
 
 
 def exp_list(numbers: List[int], exp: int) -> List[int]:
@@ -39,11 +52,9 @@ def exp_list(numbers: List[int], exp: int) -> List[int]:
     :param exp: в какую степень возвести числа в списке
     :return: список натуральных чисел
     """
-
-    # пиши свой код здесь
-
-    return []
-
+    #
+    result = [i ** exp for i in numbers]
+    return result
 
 def get_cashback(operations: List[Dict[str, Any]], special_category: List[str]) -> float:
     """
@@ -76,6 +87,7 @@ def get_path_to_file() -> Optional[Path]:
 
     :return: путь до тестового файла tasks.csv
     """
+
     if Path().resolve().name == 'tests':
         base_path = Path().resolve().parent
     else:
@@ -104,7 +116,11 @@ def csv_reader(header: str) -> int:
     :param header: название заголовка
     :return: количество уникальных элементов в столбце
     """
-
-    # пиши свой код здесь
-
-    return 0
+    res = 0
+    with open(get_path_to_file()) as f:
+        reader = csv.DictReader(f)
+        words = list()
+        for raw in reader:
+            words.append(raw[header])
+        uniq_words = set(words)
+    return len(uniq_words)
